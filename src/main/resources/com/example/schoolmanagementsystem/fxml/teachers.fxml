@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.schoolmanagementsystem.controller.TeacherController"
+            prefWidth="1200" prefHeight="750" style="-fx-background-color: #f0f2f5;">
+    <top>
+        <HBox style="-fx-background-color: #2e7d32; -fx-padding: 12 20;" alignment="CENTER_LEFT" spacing="16">
+            <Button text="← Dashboard" onAction="#goToDashboard"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 13; -fx-cursor: hand;" />
+            <Label text="👩‍🏫 Teacher Management"
+                   style="-fx-text-fill: white; -fx-font-size: 17; -fx-font-weight: bold;" />
+        </HBox>
+    </top>
+    <center>
+        <SplitPane dividerPositions="0.58">
+            <VBox spacing="10" style="-fx-padding: 16;">
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <TextField fx:id="searchField" promptText="🔍 Search teachers..."
+                               prefWidth="300" style="-fx-padding: 8; -fx-border-color: #ccc; -fx-border-radius: 4;" />
+                    <Button text="Search" onAction="#handleSearch"
+                            style="-fx-background-color: #2e7d32; -fx-text-fill: white; -fx-background-radius: 4; -fx-cursor: hand; -fx-padding: 8 16;" />
+                </HBox>
+                <TableView fx:id="teacherTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colTeacherId" text="Teacher ID" prefWidth="90" />
+                        <TableColumn fx:id="colFirstName" text="First Name" prefWidth="110" />
+                        <TableColumn fx:id="colLastName" text="Last Name" prefWidth="110" />
+                        <TableColumn fx:id="colSubject" text="Subject" prefWidth="130" />
+                        <TableColumn fx:id="colPhone" text="Phone" prefWidth="110" />
+                        <TableColumn fx:id="colSalary" text="Salary (KSh)" prefWidth="100" />
+                        <TableColumn fx:id="colStatus" text="Status" prefWidth="80" />
+                    </columns>
+                </TableView>
+                <Label fx:id="statusLabel" text="" style="-fx-text-fill: #2e7d32; -fx-font-size: 12;" />
+            </VBox>
+
+            <ScrollPane fitToWidth="true">
+                <VBox spacing="12" style="-fx-padding: 20; -fx-background-color: white;">
+                    <Label text="Teacher Details" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #2e7d32;" />
+                    <Separator />
+
+                    <Label text="Teacher ID" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                    <TextField fx:id="teacherIdField" editable="false" style="-fx-background-color: #f5f5f5; -fx-padding: 8; -fx-border-color: #ddd; -fx-border-radius: 4;" />
+
+                    <HBox spacing="12">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="First Name *" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                            <TextField fx:id="firstNameField" promptText="First name" style="-fx-padding: 8; -fx-border-color: #ccc; -fx-border-radius: 4;" />
+                        </VBox>
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Last Name *" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                            <TextField fx:id="lastNameField" promptText="Last name" style="-fx-padding: 8; -fx-border-color: #ccc; -fx-border-radius: 4;" />
+                        </VBox>
+                    </HBox>
+
+                    <HBox spacing="12">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Gender" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                            <ComboBox fx:id="genderCombo" maxWidth="Infinity" />
+                        </VBox>
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Hire Date" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                            <DatePicker fx:id="hireDatePicker" maxWidth="Infinity" />
+                        </VBox>
+                    </HBox>
+
+                    <Label text="Email" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                    <TextField fx:id="emailField" promptText="teacher@school.ac.ke" style="-fx-padding: 8; -fx-border-color: #ccc; -fx-border-radius: 4;" />
+
+                    <HBox spacing="12">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Phone" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                            <TextField fx:id="phoneField" promptText="07XX XXX XXX" style="-fx-padding: 8; -fx-border-color: #ccc; -fx-border-radius: 4;" />
+                        </VBox>
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Salary (KSh)" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                            <TextField fx:id="salaryField" promptText="e.g. 45000" style="-fx-padding: 8; -fx-border-color: #ccc; -fx-border-radius: 4;" />
+                        </VBox>
+                    </HBox>
+
+                    <Label text="Subject / Department" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                    <TextField fx:id="subjectField" promptText="Main subject taught" style="-fx-padding: 8; -fx-border-color: #ccc; -fx-border-radius: 4;" />
+
+                    <Label text="Qualification" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                    <TextField fx:id="qualificationField" promptText="e.g. B.Ed, PGDE, M.Sc" style="-fx-padding: 8; -fx-border-color: #ccc; -fx-border-radius: 4;" />
+
+                    <Label text="Address" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                    <TextField fx:id="addressField" promptText="Physical address" style="-fx-padding: 8; -fx-border-color: #ccc; -fx-border-radius: 4;" />
+
+                    <Label text="Status" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                    <ComboBox fx:id="statusCombo" maxWidth="Infinity" />
+
+                    <Separator />
+                    <HBox spacing="10">
+                        <Button text="✅ Add" onAction="#handleAdd" prefWidth="90" style="-fx-background-color: #2e7d32; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-cursor: hand; -fx-padding: 8;" />
+                        <Button text="✏️ Update" onAction="#handleUpdate" prefWidth="90" style="-fx-background-color: #0277bd; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-cursor: hand; -fx-padding: 8;" />
+                        <Button text="🗑️ Delete" onAction="#handleDelete" prefWidth="90" style="-fx-background-color: #c62828; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-cursor: hand; -fx-padding: 8;" />
+                        <Button text="🔄 Clear" onAction="#handleClear" prefWidth="90" style="-fx-background-color: #546e7a; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-cursor: hand; -fx-padding: 8;" />
+                    </HBox>
+                </VBox>
+            </ScrollPane>
+        </SplitPane>
+    </center>
+</BorderPane>

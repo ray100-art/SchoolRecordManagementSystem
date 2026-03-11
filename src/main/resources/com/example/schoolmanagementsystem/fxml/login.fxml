@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.example.schoolmanagementsystem.controller.LoginController"
+           style="-fx-background-color: linear-gradient(to bottom right, #1a237e, #0d47a1);">
+
+    <VBox alignment="CENTER" spacing="16" maxWidth="400"
+          style="-fx-background-color: white; -fx-background-radius: 16; -fx-padding: 48;
+                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 20, 0, 0, 10);">
+
+        <Label text="🏫" style="-fx-font-size: 48;" />
+        <Label text="School Management System"
+               style="-fx-font-size: 19; -fx-font-weight: bold; -fx-text-fill: #1a237e;"
+               wrapText="true" textAlignment="CENTER" />
+        <Label text="Powered By ....." style="-fx-font-size: 11; -fx-text-fill: #aaa;" />
+
+        <Separator />
+
+        <Label text="Sign In to Your Account"
+               style="-fx-font-size: 14; -fx-text-fill: #555; -fx-font-weight: bold;" />
+
+        <VBox spacing="4">
+            <Label text="Username" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+            <TextField fx:id="usernameField" promptText="Enter your username"
+                       style="-fx-padding: 10; -fx-font-size: 13; -fx-border-color: #ccc;
+                              -fx-border-radius: 6; -fx-background-radius: 6;" />
+        </VBox>
+
+        <VBox spacing="4">
+            <Label text="Password" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+            <PasswordField fx:id="passwordField" promptText="Enter your password"
+                           style="-fx-padding: 10; -fx-font-size: 13; -fx-border-color: #ccc;
+                                  -fx-border-radius: 6; -fx-background-radius: 6;" />
+        </VBox>
+
+        <Label fx:id="errorLabel" text="" wrapText="true"
+               style="-fx-text-fill: #e74c3c; -fx-font-size: 12;" />
+
+        <Button text="🔑  Sign In" onAction="#handleLogin" maxWidth="Infinity"
+                style="-fx-background-color: #1a237e; -fx-text-fill: white; -fx-font-size: 14;
+                       -fx-font-weight: bold; -fx-padding: 11; -fx-background-radius: 6; -fx-cursor: hand;" />
+
+        <Separator />
+
+        <VBox alignment="CENTER" spacing="6">
+            <Label text="Don't have an account yet?" style="-fx-text-fill: #666; -fx-font-size: 12;" />
+            <Button text="➕  Create New Account" onAction="#goToRegister" maxWidth="Infinity"
+                    style="-fx-background-color: #e8f5e9; -fx-text-fill: #1b5e20; -fx-font-size: 13;
+                           -fx-font-weight: bold; -fx-padding: 10; -fx-background-radius: 6;
+                           -fx-border-color: #1b5e20; -fx-border-radius: 6; -fx-cursor: hand;" />
+        </VBox>
+
+        <Label text="Default admin: admin / admin123"
+               style="-fx-text-fill: #bbb; -fx-font-size: 10;" />
+    </VBox>
+</StackPane>

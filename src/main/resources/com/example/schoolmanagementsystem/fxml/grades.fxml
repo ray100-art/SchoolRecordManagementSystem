@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.schoolmanagementsystem.controller.GradeController"
+            prefWidth="1200" prefHeight="750" style="-fx-background-color: #f0f2f5;">
+    <top>
+        <HBox style="-fx-background-color: #0277bd; -fx-padding: 12 20;" alignment="CENTER_LEFT" spacing="16">
+            <Button text="← Dashboard" onAction="#goToDashboard"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 13; -fx-cursor: hand;" />
+            <Label text="📝 Grades &amp; Marks Management"
+                   style="-fx-text-fill: white; -fx-font-size: 17; -fx-font-weight: bold;" />
+        </HBox>
+    </top>
+    <center>
+        <SplitPane dividerPositions="0.62">
+            <VBox spacing="10" style="-fx-padding: 16;">
+                <TableView fx:id="gradeTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colStudent" text="Student" prefWidth="140" />
+                        <TableColumn fx:id="colStudentRef" text="Reg No." prefWidth="80" />
+                        <TableColumn fx:id="colSubject" text="Subject" prefWidth="120" />
+                        <TableColumn fx:id="colMarks" text="Marks" prefWidth="65" />
+                        <TableColumn fx:id="colTotal" text="Total" prefWidth="60" />
+                        <TableColumn fx:id="colGrade" text="Grade" prefWidth="60" />
+                        <TableColumn fx:id="colTerm" text="Term" prefWidth="75" />
+                        <TableColumn fx:id="colExamType" text="Exam" prefWidth="80" />
+                        <TableColumn fx:id="colYear" text="Year" prefWidth="60" />
+                    </columns>
+                </TableView>
+                <Label fx:id="statusLabel" text="" style="-fx-text-fill: #0277bd; -fx-font-size: 12;" />
+            </VBox>
+
+            <ScrollPane fitToWidth="true">
+                <VBox spacing="12" style="-fx-padding: 20; -fx-background-color: white;">
+                    <Label text="Record Grade" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #0277bd;" />
+                    <Separator />
+
+                    <Label text="Student *" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                    <ComboBox fx:id="studentCombo" maxWidth="Infinity" promptText="Select student" />
+
+                    <Label text="Subject *" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                    <ComboBox fx:id="subjectCombo" maxWidth="Infinity" promptText="Select subject" />
+
+                    <HBox spacing="12">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Marks Obtained *" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                            <TextField fx:id="marksField" promptText="e.g. 75"
+                                       style="-fx-padding: 8; -fx-border-color: #ccc; -fx-border-radius: 4;" />
+                        </VBox>
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Total Marks" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                            <TextField fx:id="totalMarksField" promptText="e.g. 100"
+                                       style="-fx-padding: 8; -fx-border-color: #ccc; -fx-border-radius: 4;" />
+                        </VBox>
+                    </HBox>
+
+                    <!-- Live Grade Preview -->
+                    <Label fx:id="gradePreviewLabel" text="Grade: —"
+                           style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #0277bd; -fx-background-color: #e3f2fd; -fx-padding: 8; -fx-background-radius: 6;" />
+
+                    <HBox spacing="12">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Term" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                            <ComboBox fx:id="termCombo" maxWidth="Infinity" />
+                        </VBox>
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Exam Type" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                            <ComboBox fx:id="examTypeCombo" maxWidth="Infinity" />
+                        </VBox>
+                    </HBox>
+
+                    <Label text="Academic Year" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                    <TextField fx:id="academicYearField" promptText="e.g. 2025"
+                               style="-fx-padding: 8; -fx-border-color: #ccc; -fx-border-radius: 4;" />
+
+                    <Label text="Remarks" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                    <TextField fx:id="remarksField" promptText="Optional remarks"
+                               style="-fx-padding: 8; -fx-border-color: #ccc; -fx-border-radius: 4;" />
+
+                    <Separator />
+                    <HBox spacing="10">
+                        <Button text="✅ Save" onAction="#handleAdd" prefWidth="90" style="-fx-background-color: #0277bd; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-cursor: hand; -fx-padding: 8;" />
+                        <Button text="✏️ Update" onAction="#handleUpdate" prefWidth="90" style="-fx-background-color: #2e7d32; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-cursor: hand; -fx-padding: 8;" />
+                        <Button text="🗑️ Delete" onAction="#handleDelete" prefWidth="90" style="-fx-background-color: #c62828; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-cursor: hand; -fx-padding: 8;" />
+                        <Button text="🔄 Clear" onAction="#handleClear" prefWidth="90" style="-fx-background-color: #546e7a; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-cursor: hand; -fx-padding: 8;" />
+                    </HBox>
+                </VBox>
+            </ScrollPane>
+        </SplitPane>
+    </center>
+</BorderPane>

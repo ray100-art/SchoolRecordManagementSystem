@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.schoolmanagementsystem.controller.AttendanceController"
+            prefWidth="1200" prefHeight="750" style="-fx-background-color: #f0f2f5;">
+    <top>
+        <HBox style="-fx-background-color: #4a148c; -fx-padding: 12 20;" alignment="CENTER_LEFT" spacing="16">
+            <Button text="← Dashboard" onAction="#goToDashboard"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 13; -fx-cursor: hand;" />
+            <Label text="✅ Attendance Management"
+                   style="-fx-text-fill: white; -fx-font-size: 17; -fx-font-weight: bold;" />
+        </HBox>
+    </top>
+    <center>
+        <SplitPane dividerPositions="0.65">
+            <VBox spacing="10" style="-fx-padding: 16;">
+                <!-- Filter Bar -->
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Filter by Date:" style="-fx-font-size: 13;" />
+                    <DatePicker fx:id="filterDatePicker" />
+                    <Button text="Filter" onAction="#handleFilterByDate"
+                            style="-fx-background-color: #4a148c; -fx-text-fill: white; -fx-background-radius: 4; -fx-cursor: hand; -fx-padding: 8 14;" />
+                    <Button text="Show All" onAction="#handleShowAll"
+                            style="-fx-background-color: #546e7a; -fx-text-fill: white; -fx-background-radius: 4; -fx-cursor: hand; -fx-padding: 8 14;" />
+                </HBox>
+                <Label fx:id="statsLabel" text="" style="-fx-text-fill: #4a148c; -fx-font-weight: bold;" />
+
+                <TableView fx:id="attendanceTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colStudentName" text="Student" prefWidth="160" />
+                        <TableColumn fx:id="colStudentRef" text="Reg No." prefWidth="80" />
+                        <TableColumn fx:id="colClass" text="Class" prefWidth="80" />
+                        <TableColumn fx:id="colDate" text="Date" prefWidth="100" />
+                        <TableColumn fx:id="colStatus" text="Status" prefWidth="90" />
+                        <TableColumn fx:id="colRemarks" text="Remarks" prefWidth="200" />
+                    </columns>
+                </TableView>
+                <Label fx:id="statusLabel" text="" style="-fx-text-fill: #4a148c; -fx-font-size: 12;" />
+            </VBox>
+
+            <VBox spacing="14" style="-fx-padding: 20; -fx-background-color: white;">
+                <Label text="Mark Attendance" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #4a148c;" />
+                <Separator />
+
+                <Label text="Student *" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                <ComboBox fx:id="studentCombo" maxWidth="Infinity" promptText="Select student" />
+
+                <Label text="Date *" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                <DatePicker fx:id="datePicker" maxWidth="Infinity" />
+
+                <Label text="Status *" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                <ComboBox fx:id="statusCombo" maxWidth="Infinity" />
+
+                <Label text="Remarks" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                <TextField fx:id="remarksField" promptText="Optional remarks"
+                           style="-fx-padding: 8; -fx-border-color: #ccc; -fx-border-radius: 4;" />
+
+                <Separator />
+                <Button text="✅ Mark Attendance" onAction="#handleMark" maxWidth="Infinity"
+                        style="-fx-background-color: #4a148c; -fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 10;" />
+
+                <VBox spacing="6" style="-fx-background-color: #f3e5f5; -fx-padding: 12; -fx-background-radius: 8;">
+                    <Label text="Status Guide:" style="-fx-font-weight: bold; -fx-text-fill: #4a148c;" />
+                    <Label text="🟢 Present  🔴 Absent  🟡 Late  🟣 Excused" style="-fx-text-fill: #666; -fx-font-size: 12;" />
+                </VBox>
+            </VBox>
+        </SplitPane>
+    </center>
+</BorderPane>

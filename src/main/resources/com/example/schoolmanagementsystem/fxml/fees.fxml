@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.schoolmanagementsystem.controller.FeeController"
+            prefWidth="1200" prefHeight="750" style="-fx-background-color: #f0f2f5;">
+    <top>
+        <HBox style="-fx-background-color: #880e4f; -fx-padding: 12 20;" alignment="CENTER_LEFT" spacing="16">
+            <Button text="← Dashboard" onAction="#goToDashboard"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 13; -fx-cursor: hand;" />
+            <Label text="💰 Fee Payment Management"
+                   style="-fx-text-fill: white; -fx-font-size: 17; -fx-font-weight: bold;" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Label fx:id="totalCollectedLabel" text="" style="-fx-text-fill: #f8bbd9; -fx-font-size: 13;" />
+            <Label fx:id="totalOutstandingLabel" text="" style="-fx-text-fill: #ffcdd2; -fx-font-size: 13;" />
+        </HBox>
+    </top>
+    <center>
+        <SplitPane dividerPositions="0.62">
+            <VBox spacing="10" style="-fx-padding: 16;">
+                <TableView fx:id="feeTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colReceipt" text="Receipt No." prefWidth="100" />
+                        <TableColumn fx:id="colStudent" text="Student" prefWidth="140" />
+                        <TableColumn fx:id="colClass" text="Class" prefWidth="70" />
+                        <TableColumn fx:id="colAmount" text="Total (KSh)" prefWidth="90" />
+                        <TableColumn fx:id="colPaid" text="Paid (KSh)" prefWidth="90" />
+                        <TableColumn fx:id="colBalance" text="Balance" prefWidth="90" />
+                        <TableColumn fx:id="colFeeType" text="Fee Type" prefWidth="100" />
+                        <TableColumn fx:id="colStatus" text="Status" prefWidth="80" />
+                        <TableColumn fx:id="colDate" text="Date" prefWidth="100" />
+                    </columns>
+                </TableView>
+                <Label fx:id="statusLabel" text="" style="-fx-text-fill: #880e4f; -fx-font-size: 12;" />
+            </VBox>
+
+            <ScrollPane fitToWidth="true">
+                <VBox spacing="12" style="-fx-padding: 20; -fx-background-color: white;">
+                    <Label text="Record Payment" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #880e4f;" />
+                    <Separator />
+
+                    <Label text="Receipt No. (Auto)" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                    <Label fx:id="receiptPreviewLabel" text=""
+                           style="-fx-font-weight: bold; -fx-text-fill: #880e4f; -fx-font-size: 14;" />
+
+                    <Label text="Student *" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                    <ComboBox fx:id="studentCombo" maxWidth="Infinity" promptText="Select student" />
+
+                    <HBox spacing="12">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Total Amount (KSh) *" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                            <TextField fx:id="amountField" promptText="e.g. 15000"
+                                       style="-fx-padding: 8; -fx-border-color: #ccc; -fx-border-radius: 4;" />
+                        </VBox>
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Amount Paid (KSh)" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                            <TextField fx:id="amountPaidField" promptText="e.g. 10000"
+                                       style="-fx-padding: 8; -fx-border-color: #ccc; -fx-border-radius: 4;" />
+                        </VBox>
+                    </HBox>
+
+                    <Label fx:id="balanceLabel" text="Balance: —"
+                           style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #c62828;" />
+
+                    <Label text="Fee Type" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                    <ComboBox fx:id="feeTypeCombo" maxWidth="Infinity" />
+
+                    <HBox spacing="12">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Term" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                            <ComboBox fx:id="termCombo" maxWidth="Infinity" />
+                        </VBox>
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Academic Year" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                            <TextField fx:id="academicYearField" style="-fx-padding: 8; -fx-border-color: #ccc; -fx-border-radius: 4;" />
+                        </VBox>
+                    </HBox>
+
+                    <HBox spacing="12">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Payment Method" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                            <ComboBox fx:id="paymentMethodCombo" maxWidth="Infinity" />
+                        </VBox>
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Payment Date" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                            <DatePicker fx:id="paymentDatePicker" maxWidth="Infinity" />
+                        </VBox>
+                    </HBox>
+
+                    <Separator />
+                    <HBox spacing="10">
+                        <Button text="💳 Record Payment" onAction="#handleAdd" prefWidth="150"
+                                style="-fx-background-color: #880e4f; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-cursor: hand; -fx-padding: 10;" />
+                        <Button text="🔄 Clear" onAction="#handleClear" prefWidth="90"
+                                style="-fx-background-color: #546e7a; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-cursor: hand; -fx-padding: 10;" />
+                    </HBox>
+                </VBox>
+            </ScrollPane>
+        </SplitPane>
+    </center>
+</BorderPane>

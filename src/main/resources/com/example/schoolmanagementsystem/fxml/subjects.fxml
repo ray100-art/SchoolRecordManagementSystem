@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.schoolmanagementsystem.controller.SubjectController"
+            prefWidth="1100" prefHeight="700" style="-fx-background-color: #f0f2f5;">
+    <top>
+        <HBox style="-fx-background-color: #e65100; -fx-padding: 12 20;" alignment="CENTER_LEFT" spacing="16">
+            <Button text="← Dashboard" onAction="#goToDashboard"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 13; -fx-cursor: hand;" />
+            <Label text="📚 Subject Management"
+                   style="-fx-text-fill: white; -fx-font-size: 17; -fx-font-weight: bold;" />
+        </HBox>
+    </top>
+    <center>
+        <SplitPane dividerPositions="0.58">
+            <VBox spacing="10" style="-fx-padding: 16;">
+                <TableView fx:id="subjectTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colCode" text="Subject Code" prefWidth="110" />
+                        <TableColumn fx:id="colName" text="Subject Name" prefWidth="160" />
+                        <TableColumn fx:id="colTeacher" text="Assigned Teacher" prefWidth="160" />
+                        <TableColumn fx:id="colCredits" text="Credit Hours" prefWidth="90" />
+                        <TableColumn fx:id="colDescription" text="Description" prefWidth="200" />
+                    </columns>
+                </TableView>
+                <Label fx:id="statusLabel" text="" style="-fx-text-fill: #e65100; -fx-font-size: 12;" />
+            </VBox>
+
+            <VBox spacing="12" style="-fx-padding: 20; -fx-background-color: white;">
+                <Label text="Subject Details" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #e65100;" />
+                <Separator />
+
+                <Label text="Subject Code *" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                <TextField fx:id="subjectCodeField" promptText="e.g. MATH101"
+                           style="-fx-padding: 8; -fx-border-color: #ccc; -fx-border-radius: 4;" />
+
+                <Label text="Subject Name *" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                <TextField fx:id="subjectNameField" promptText="e.g. Mathematics"
+                           style="-fx-padding: 8; -fx-border-color: #ccc; -fx-border-radius: 4;" />
+
+                <Label text="Description" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                <TextArea fx:id="descriptionArea" promptText="Subject description..." prefRowCount="3"
+                          style="-fx-border-color: #ccc; -fx-border-radius: 4;" />
+
+                <Label text="Credit Hours" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                <Spinner fx:id="creditSpinner" prefWidth="120" />
+
+                <Label text="Assigned Teacher" style="-fx-font-size: 12; -fx-text-fill: #555;" />
+                <ComboBox fx:id="teacherCombo" maxWidth="Infinity" promptText="Select teacher (optional)" />
+
+                <Separator />
+                <HBox spacing="10">
+                    <Button text="✅ Add" onAction="#handleAdd" prefWidth="90" style="-fx-background-color: #e65100; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-cursor: hand; -fx-padding: 8;" />
+                    <Button text="✏️ Update" onAction="#handleUpdate" prefWidth="90" style="-fx-background-color: #0277bd; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-cursor: hand; -fx-padding: 8;" />
+                    <Button text="🗑️ Delete" onAction="#handleDelete" prefWidth="90" style="-fx-background-color: #c62828; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-cursor: hand; -fx-padding: 8;" />
+                    <Button text="🔄 Clear" onAction="#handleClear" prefWidth="90" style="-fx-background-color: #546e7a; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-cursor: hand; -fx-padding: 8;" />
+                </HBox>
+            </VBox>
+        </SplitPane>
+    </center>
+</BorderPane>
