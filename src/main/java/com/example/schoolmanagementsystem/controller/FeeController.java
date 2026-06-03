@@ -55,7 +55,6 @@ public class FeeController {
         loadFees();
         paymentDatePicker.setValue(LocalDate.now());
 
-        // Auto-calculate balance
         amountField.textProperty().addListener((obs, old, val) -> updateBalance());
         amountPaidField.textProperty().addListener((obs, old, val) -> updateBalance());
     }
@@ -120,6 +119,11 @@ public class FeeController {
         Student s = studentCombo.getValue();
         if (s == null) { setStatus("⚠ Select a student."); return; }
         if (amountField.getText().trim().isEmpty()) { setStatus("⚠ Enter total amount."); return; }
+
+        // Fix #8: validate fee type, term, and payment method before saving
+        if (feeTypeCombo.getValue() == null) { setStatus("⚠ Select a fee type."); return; }
+        if (termCombo.getValue() == null) { setStatus("⚠ Select a term."); return; }
+        if (paymentMethodCombo.getValue() == null) { setStatus("⚠ Select a payment method."); return; }
 
         FeePayment f = new FeePayment();
         f.setStudentId(s.getId());

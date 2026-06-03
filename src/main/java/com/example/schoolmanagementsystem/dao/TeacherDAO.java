@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TeacherDAO - All database operations for Teachers
+ * TeacherDAO - All database operations for Teachers (PostgreSQL)
  */
 public class TeacherDAO {
 
@@ -29,7 +29,7 @@ public class TeacherDAO {
             ps.setString(6, t.getGender());
             ps.setString(7, t.getSubject());
             ps.setString(8, t.getQualification());
-            ps.setString(9, t.getHireDate() != null ? t.getHireDate().toString() : LocalDate.now().toString());
+            ps.setDate(9, Date.valueOf(t.getHireDate() != null ? t.getHireDate() : LocalDate.now()));
             ps.setString(10, t.getAddress());
             ps.setDouble(11, t.getSalary());
             ps.setString(12, t.getStatus());
@@ -54,7 +54,7 @@ public class TeacherDAO {
             ps.setString(5, t.getGender());
             ps.setString(6, t.getSubject());
             ps.setString(7, t.getQualification());
-            ps.setString(8, t.getHireDate() != null ? t.getHireDate().toString() : null);
+            ps.setDate(8, t.getHireDate() != null ? Date.valueOf(t.getHireDate()) : null);
             ps.setString(9, t.getAddress());
             ps.setDouble(10, t.getSalary());
             ps.setString(11, t.getStatus());
@@ -80,7 +80,9 @@ public class TeacherDAO {
 
     public List<Teacher> getAllTeachers() {
         List<Teacher> list = new ArrayList<>();
-        try (ResultSet rs = db.getConnection().createStatement().executeQuery("SELECT * FROM teachers ORDER BY first_name")) {
+        // Fix #4: use try-with-resources for Statement
+        try (Statement stmt = db.getConnection().createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT * FROM teachers ORDER BY first_name")) {
             while (rs.next()) list.add(mapRow(rs));
         } catch (SQLException e) {
             System.err.println("Error fetching teachers: " + e.getMessage());
@@ -90,26 +92,31 @@ public class TeacherDAO {
 
     public List<Teacher> searchTeachers(String query) {
         List<Teacher> list = new ArrayList<>();
-        String sql = "SELECT * FROM teachers WHERE first_name LIKE ? OR last_name LIKE ? OR teacher_id LIKE ? OR subject LIKE ?";
+        String sql = "SELECT * FROM teachers WHERE first_name ILIKE ? OR last_name ILIKE ? OR teacher_id ILIKE ? OR subject ILIKE ?";
         try (PreparedStatement ps = db.getConnection().prepareStatement(sql)) {
             String q = "%" + query + "%";
             ps.setString(1, q); ps.setString(2, q); ps.setString(3, q); ps.setString(4, q);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) list.add(mapRow(rs));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(mapRow(rs));
+            }
         } catch (SQLException e) { e.printStackTrace(); }
         return list;
     }
 
     public int getTotalCount() {
-        try (ResultSet rs = db.getConnection().createStatement().executeQuery("SELECT COUNT(*) FROM teachers WHERE status='Active'")) {
+        try (Statement stmt = db.getConnection().createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM teachers WHERE status='Active'")) {
             if (rs.next()) return rs.getInt(1);
         } catch (SQLException e) { e.printStackTrace(); }
         return 0;
     }
 
+    // Fix #5: use MAX instead of COUNT to avoid duplicate ID on concurrent inserts
     public String generateNextTeacherId() {
-        try (ResultSet rs = db.getConnection().createStatement().executeQuery("SELECT COUNT(*) FROM teachers")) {
-            if (rs.next()) return String.format("TCH%04d", rs.getInt(1) + 1);
+        String sql = "SELECT COALESCE(MAX(CAST(SUBSTRING(teacher_id FROM 4) AS INTEGER)), 0) + 1 FROM teachers WHERE teacher_id ~ '^TCH[0-9]+$'";
+        try (Statement stmt = db.getConnection().createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) return String.format("TCH%04d", rs.getInt(1));
         } catch (SQLException e) { e.printStackTrace(); }
         return "TCH0001";
     }
@@ -125,8 +132,8 @@ public class TeacherDAO {
         t.setGender(rs.getString("gender"));
         t.setSubject(rs.getString("subject"));
         t.setQualification(rs.getString("qualification"));
-        String hd = rs.getString("hire_date");
-        if (hd != null && !hd.isEmpty()) t.setHireDate(LocalDate.parse(hd));
+        Date hd = rs.getDate("hire_date");
+        if (hd != null) t.setHireDate(hd.toLocalDate());
         t.setAddress(rs.getString("address"));
         t.setSalary(rs.getDouble("salary"));
         t.setStatus(rs.getString("status"));

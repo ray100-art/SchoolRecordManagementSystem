@@ -15,6 +15,8 @@ public class LoginController {
 
     private final UserDAO userDAO = new UserDAO();
 
+    private static final int MAX_ATTEMPTS = 5;
+
     @FXML
     public void initialize() {
         errorLabel.setVisible(false);
@@ -32,11 +34,20 @@ public class LoginController {
         String password = passwordField.getText().trim();
 
         if (username.isEmpty() || password.isEmpty()) {
-            showError("Please enter both username and password.");
+            showError("⚠ Please enter both username and password.");
+            return;
+        }
+
+        // Fix #3: check lock state from DB (not an in-memory counter) before attempting auth
+        if (userDAO.isAccountLocked(username)) {
+            showError("🔒 Account locked after too many failed attempts.\nContact your administrator to unlock it.");
+            passwordField.clear();
+            passwordField.setDisable(true);
             return;
         }
 
         User user = userDAO.authenticate(username, password);
+
         if (user != null) {
             User.setCurrentUser(user);
             try {
@@ -46,8 +57,21 @@ public class LoginController {
                 showError("Error loading dashboard.");
             }
         } else {
-            showError("Invalid username or password. Please try again.");
             passwordField.clear();
+
+            // Fix #3: read remaining attempts directly from the DB so the
+            // count is always accurate even after an app restart
+            if (userDAO.isAccountLocked(username)) {
+                showError("🔒 Account locked after " + MAX_ATTEMPTS + " failed attempts.\nContact your administrator to unlock it.");
+                passwordField.setDisable(true);
+            } else {
+                int remaining = MAX_ATTEMPTS - userDAO.getFailedAttempts(username);
+                if (remaining > 0) {
+                    showError("❌ Invalid username or password.\n" + remaining + " attempt(s) remaining before lockout.");
+                } else {
+                    showError("❌ Invalid username or password.");
+                }
+            }
         }
     }
 

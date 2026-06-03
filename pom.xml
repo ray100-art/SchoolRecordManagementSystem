@@ -18,8 +18,8 @@
         <maven.compiler.target>21</maven.compiler.target>
         <javafx.version>21.0.2</javafx.version>
         <junit.version>5.10.2</junit.version>
-        <!-- SQLite for local database storage -->
-        <sqlite.version>3.45.1.0</sqlite.version>
+        <!-- PostgreSQL JDBC -->
+        <postgresql.version>42.7.3</postgresql.version>
     </properties>
 
     <dependencies>
@@ -57,11 +57,18 @@
             <version>0.4.0</version>
         </dependency>
 
-        <!-- ADDED: SQLite Database (no server needed - perfect for desktop apps) -->
+        <!-- PostgreSQL JDBC Driver -->
         <dependency>
-            <groupId>org.xerial</groupId>
-            <artifactId>sqlite-jdbc</artifactId>
-            <version>${sqlite.version}</version>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.3</version>
+        </dependency>
+
+        <!-- BCrypt Password Hashing -->
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.4</version>
         </dependency>
 
         <!-- ADDED: PDF Export -->
@@ -104,6 +111,10 @@
                 <configuration>
                     <source>21</source>
                     <target>21</target>
+                    <compilerArgs>
+                        <arg>--add-reads</arg>
+                        <arg>com.example.schoolmanagementsystem=ALL-UNNAMED</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
 
@@ -123,6 +134,10 @@
                             <noManPages>true</noManPages>
                             <stripDebug>true</stripDebug>
                             <noHeaderFiles>true</noHeaderFiles>
+                            <options>
+                                <option>--add-reads</option>
+                                <option>com.example.schoolmanagementsystem=ALL-UNNAMED</option>
+                            </options>
                         </configuration>
                     </execution>
                 </executions>

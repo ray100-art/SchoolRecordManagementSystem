@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * AttendanceDAO - All database operations for Attendance
+ * AttendanceDAO - All database operations for Attendance (PostgreSQL)
  */
 public class AttendanceDAO {
 
@@ -16,13 +16,17 @@ public class AttendanceDAO {
 
     public boolean markAttendance(Attendance a) {
         String sql = """
-            INSERT OR REPLACE INTO attendance (student_id, class_group, date, status, remarks)
+            INSERT INTO attendance (student_id, class_group, date, status, remarks)
             VALUES (?, ?, ?, ?, ?)
+            ON CONFLICT (student_id, date) DO UPDATE
+              SET status = EXCLUDED.status,
+                  remarks = EXCLUDED.remarks,
+                  class_group = EXCLUDED.class_group
         """;
         try (PreparedStatement ps = db.getConnection().prepareStatement(sql)) {
             ps.setInt(1, a.getStudentId());
             ps.setString(2, a.getClassGroup());
-            ps.setString(3, a.getDate().toString());
+            ps.setDate(3, Date.valueOf(a.getDate()));
             ps.setString(4, a.getStatus());
             ps.setString(5, a.getRemarks());
             ps.executeUpdate();
@@ -44,9 +48,10 @@ public class AttendanceDAO {
             ORDER BY s.first_name
         """;
         try (PreparedStatement ps = db.getConnection().prepareStatement(sql)) {
-            ps.setString(1, date.toString());
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) list.add(mapRow(rs));
+            ps.setDate(1, Date.valueOf(date));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(mapRow(rs));
+            }
         } catch (SQLException e) { e.printStackTrace(); }
         return list;
     }
@@ -63,8 +68,9 @@ public class AttendanceDAO {
         """;
         try (PreparedStatement ps = db.getConnection().prepareStatement(sql)) {
             ps.setInt(1, studentId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) list.add(mapRow(rs));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(mapRow(rs));
+            }
         } catch (SQLException e) { e.printStackTrace(); }
         return list;
     }
@@ -78,28 +84,29 @@ public class AttendanceDAO {
             JOIN students s ON a.student_id = s.id
             ORDER BY a.date DESC, s.first_name
         """;
-        try (ResultSet rs = db.getConnection().createStatement().executeQuery(sql)) {
+        // Fix #4: use try-with-resources for Statement
+        try (Statement stmt = db.getConnection().createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) list.add(mapRow(rs));
         } catch (SQLException e) { e.printStackTrace(); }
         return list;
     }
 
-    /** Returns attendance percentage for a student */
     public double getAttendancePercentage(int studentId) {
         String sql = """
-            SELECT
-                COUNT(*) AS total,
-                SUM(CASE WHEN status='Present' THEN 1 ELSE 0 END) AS present
+            SELECT COUNT(*) AS total,
+                   SUM(CASE WHEN status='Present' THEN 1 ELSE 0 END) AS present
             FROM attendance WHERE student_id=?
         """;
         try (PreparedStatement ps = db.getConnection().prepareStatement(sql)) {
             ps.setInt(1, studentId);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                int total = rs.getInt("total");
-                int present = rs.getInt("present");
-                if (total == 0) return 0;
-                return (present * 100.0) / total;
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    int total   = rs.getInt("total");
+                    int present = rs.getInt("present");
+                    if (total == 0) return 0;
+                    return (present * 100.0) / total;
+                }
             }
         } catch (SQLException e) { e.printStackTrace(); }
         return 0;
@@ -112,8 +119,8 @@ public class AttendanceDAO {
         a.setStudentName(rs.getString("student_name"));
         a.setStudentRef(rs.getString("student_ref"));
         a.setClassGroup(rs.getString("class_group"));
-        String d = rs.getString("date");
-        if (d != null) a.setDate(LocalDate.parse(d));
+        Date d = rs.getDate("date");
+        if (d != null) a.setDate(d.toLocalDate());
         a.setStatus(rs.getString("status"));
         a.setRemarks(rs.getString("remarks"));
         return a;

@@ -9,10 +9,12 @@ public class User {
     private final IntegerProperty id = new SimpleIntegerProperty();
     private final StringProperty username = new SimpleStringProperty();
     private final StringProperty passwordHash = new SimpleStringProperty();
-    private final StringProperty role = new SimpleStringProperty(); // ADMIN, TEACHER, CLERK
+    private final StringProperty role = new SimpleStringProperty();
     private final StringProperty fullName = new SimpleStringProperty();
     private final StringProperty email = new SimpleStringProperty();
     private final BooleanProperty active = new SimpleBooleanProperty(true);
+    private final IntegerProperty failedAttempts = new SimpleIntegerProperty(0);
+    private final BooleanProperty locked = new SimpleBooleanProperty(false);
 
     // Singleton session user
     private static User currentUser;
@@ -23,7 +25,7 @@ public class User {
 
     public User() {}
 
-    public boolean isAdmin() { return "ADMIN".equals(role.get()); }
+    public boolean isAdmin()   { return "ADMIN".equals(role.get()); }
     public boolean isTeacher() { return "TEACHER".equals(role.get()); }
 
     public int getId() { return id.get(); }
@@ -53,4 +55,12 @@ public class User {
     public boolean isActive() { return active.get(); }
     public void setActive(boolean v) { this.active.set(v); }
     public BooleanProperty activeProperty() { return active; }
+
+    public int getFailedAttempts() { return failedAttempts.get(); }
+    public void setFailedAttempts(int v) { this.failedAttempts.set(v); }
+    public IntegerProperty failedAttemptsProperty() { return failedAttempts; }
+
+    public boolean isLocked() { return locked.get(); }
+    public void setLocked(boolean v) { this.locked.set(v); }
+    public BooleanProperty lockedProperty() { return locked; }
 }

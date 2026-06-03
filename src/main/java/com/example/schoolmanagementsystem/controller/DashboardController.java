@@ -41,16 +41,18 @@ public class DashboardController {
         totalTeachersLabel.setText(String.valueOf(teacherDAO.getTotalCount()));
         totalSubjectsLabel.setText(String.valueOf(subjectDAO.getAllSubjects().size()));
 
-        NumberFormat ksh = NumberFormat.getCurrencyInstance(new Locale("en", "KE"));
+        // Fix #9: Locale("en", "KE") constructor is deprecated since Java 19;
+        // use Locale.forLanguageTag for forward-compatibility
+        NumberFormat ksh = NumberFormat.getCurrencyInstance(Locale.forLanguageTag("en-KE"));
         totalFeesLabel.setText(ksh.format(feeDAO.getTotalCollected()));
     }
 
-    @FXML private void goToStudents() { navigate("students.fxml", "Students"); }
-    @FXML private void goToTeachers() { navigate("teachers.fxml", "Teachers"); }
-    @FXML private void goToSubjects() { navigate("subjects.fxml", "Subjects"); }
-    @FXML private void goToGrades() { navigate("grades.fxml", "Grades"); }
+    @FXML private void goToStudents()   { navigate("students.fxml",   "Students"); }
+    @FXML private void goToTeachers()   { navigate("teachers.fxml",   "Teachers"); }
+    @FXML private void goToSubjects()   { navigate("subjects.fxml",   "Subjects"); }
+    @FXML private void goToGrades()     { navigate("grades.fxml",     "Grades"); }
     @FXML private void goToAttendance() { navigate("attendance.fxml", "Attendance"); }
-    @FXML private void goToFees() { navigate("fees.fxml", "Fee Payments"); }
+    @FXML private void goToFees()       { navigate("fees.fxml",       "Fee Payments"); }
 
     @FXML
     private void handleLogout() {

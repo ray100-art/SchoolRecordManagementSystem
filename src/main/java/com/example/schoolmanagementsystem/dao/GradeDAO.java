@@ -77,7 +77,9 @@ public class GradeDAO {
             JOIN subjects sub ON g.subject_id = sub.id
             ORDER BY s.first_name
         """;
-        try (ResultSet rs = db.getConnection().createStatement().executeQuery(sql)) {
+        // Fix #4: use try-with-resources for Statement
+        try (Statement stmt = db.getConnection().createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) list.add(mapRow(rs));
         } catch (SQLException e) { e.printStackTrace(); }
         return list;
@@ -95,8 +97,9 @@ public class GradeDAO {
         """;
         try (PreparedStatement ps = db.getConnection().prepareStatement(sql)) {
             ps.setInt(1, studentId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) list.add(mapRow(rs));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(mapRow(rs));
+            }
         } catch (SQLException e) { e.printStackTrace(); }
         return list;
     }

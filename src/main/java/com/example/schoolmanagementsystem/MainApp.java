@@ -4,24 +4,23 @@ import com.example.schoolmanagementsystem.dao.DatabaseManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
 /**
  * Main Application Entry Point
- * School Management System - BrianNdungu
+ * School Management System
  */
 public class MainApp extends Application {
 
-    public static Stage primaryStage;
+    // Fix #10: private stage with controlled accessor instead of public mutable field
+    private static Stage primaryStage;
 
     @Override
     public void start(Stage stage) throws IOException {
         primaryStage = stage;
 
-        // Initialize database on startup
         DatabaseManager.getInstance().initializeDatabase();
 
         FXMLLoader fxmlLoader = new FXMLLoader(MainApp.class.getResource("fxml/login.fxml"));
@@ -34,6 +33,10 @@ public class MainApp extends Application {
         stage.setMinHeight(600);
         stage.setResizable(true);
         stage.show();
+    }
+
+    public static Stage getPrimaryStage() {
+        return primaryStage;
     }
 
     /**

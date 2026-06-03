@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * FeePaymentDAO - Database operations for Fee Payments
+ * FeePaymentDAO - Database operations for Fee Payments (PostgreSQL)
  */
 public class FeePaymentDAO {
 
@@ -28,7 +28,7 @@ public class FeePaymentDAO {
             ps.setString(5, f.getFeeType());
             ps.setString(6, f.getTerm());
             ps.setString(7, f.getAcademicYear());
-            ps.setString(8, f.getPaymentDate() != null ? f.getPaymentDate().toString() : LocalDate.now().toString());
+            ps.setDate(8, Date.valueOf(f.getPaymentDate() != null ? f.getPaymentDate() : LocalDate.now()));
             ps.setString(9, f.getPaymentMethod());
             ps.setString(10, f.getReceiptNumber());
             ps.setString(11, f.getStatus());
@@ -49,7 +49,9 @@ public class FeePaymentDAO {
             JOIN students s ON fp.student_id = s.id
             ORDER BY fp.payment_date DESC
         """;
-        try (ResultSet rs = db.getConnection().createStatement().executeQuery(sql)) {
+        // Fix #4: use try-with-resources for Statement
+        try (Statement stmt = db.getConnection().createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) list.add(mapRow(rs));
         } catch (SQLException e) { e.printStackTrace(); }
         return list;
@@ -67,31 +69,35 @@ public class FeePaymentDAO {
         """;
         try (PreparedStatement ps = db.getConnection().prepareStatement(sql)) {
             ps.setInt(1, studentId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) list.add(mapRow(rs));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(mapRow(rs));
+            }
         } catch (SQLException e) { e.printStackTrace(); }
         return list;
     }
 
     public double getTotalCollected() {
-        try (ResultSet rs = db.getConnection().createStatement()
-                .executeQuery("SELECT SUM(amount_paid) FROM fee_payments")) {
+        try (Statement stmt = db.getConnection().createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT COALESCE(SUM(amount_paid), 0) FROM fee_payments")) {
             if (rs.next()) return rs.getDouble(1);
         } catch (SQLException e) { e.printStackTrace(); }
         return 0;
     }
 
     public double getTotalOutstanding() {
-        try (ResultSet rs = db.getConnection().createStatement()
-                .executeQuery("SELECT SUM(balance) FROM fee_payments WHERE status != 'Paid'")) {
+        try (Statement stmt = db.getConnection().createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT COALESCE(SUM(balance), 0) FROM fee_payments WHERE status != 'Paid'")) {
             if (rs.next()) return rs.getDouble(1);
         } catch (SQLException e) { e.printStackTrace(); }
         return 0;
     }
 
+    // Fix #5: use MAX instead of COUNT to avoid duplicate receipt numbers
     public String generateReceiptNumber() {
-        try (ResultSet rs = db.getConnection().createStatement().executeQuery("SELECT COUNT(*) FROM fee_payments")) {
-            if (rs.next()) return String.format("RCP%06d", rs.getInt(1) + 1);
+        String sql = "SELECT COALESCE(MAX(CAST(SUBSTRING(receipt_number FROM 4) AS INTEGER)), 0) + 1 FROM fee_payments WHERE receipt_number ~ '^RCP[0-9]+$'";
+        try (Statement stmt = db.getConnection().createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) return String.format("RCP%06d", rs.getInt(1));
         } catch (SQLException e) { e.printStackTrace(); }
         return "RCP000001";
     }
@@ -109,8 +115,8 @@ public class FeePaymentDAO {
         f.setFeeType(rs.getString("fee_type"));
         f.setTerm(rs.getString("term"));
         f.setAcademicYear(rs.getString("academic_year"));
-        String pd = rs.getString("payment_date");
-        if (pd != null) f.setPaymentDate(LocalDate.parse(pd));
+        Date pd = rs.getDate("payment_date");
+        if (pd != null) f.setPaymentDate(pd.toLocalDate());
         f.setPaymentMethod(rs.getString("payment_method"));
         f.setReceiptNumber(rs.getString("receipt_number"));
         f.setStatus(rs.getString("status"));
