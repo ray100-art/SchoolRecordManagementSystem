@@ -42,6 +42,9 @@ public class DatabaseManager {
             String dbName = props.getProperty("db.name",     "school_management");
             dbUsername    = props.getProperty("db.username", "postgres");
             dbPassword    = props.getProperty("db.password", "");
+            // Environment variables win over db.properties, so credentials stay out of git.
+            if (System.getenv("DB_USERNAME") != null) dbUsername = System.getenv("DB_USERNAME");
+            if (System.getenv("DB_PASSWORD") != null) dbPassword = System.getenv("DB_PASSWORD");
             jdbcUrl = String.format("jdbc:postgresql://%s:%s/%s", host, port, dbName);
             System.out.println("✅ DB config loaded: " + jdbcUrl);
         } catch (IOException e) {
