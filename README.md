@@ -4,7 +4,7 @@ A desktop application for running a school's day-to-day records: students, teach
 subjects, grades, attendance and fee payments, all behind a secure login. It is built with
 JavaFX and PostgreSQL.
 
-![Java](https://img.shields.io/badge/Java-21-orange) ![JavaFX](https://img.shields.io/badge/JavaFX-21-blue) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-336791)
+[![Build](https://github.com/ray100-art/SchoolRecordManagementSystem/actions/workflows/build.yml/badge.svg)](https://github.com/ray100-art/SchoolRecordManagementSystem/actions/workflows/build.yml) ![Java](https://img.shields.io/badge/Java-21-orange) ![JavaFX](https://img.shields.io/badge/JavaFX-21-blue) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-336791)
 
 ## Features
 
