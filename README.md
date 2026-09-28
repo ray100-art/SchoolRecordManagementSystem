@@ -76,3 +76,7 @@ reachable.
 - PDF report cards and CSV import/export (the iText and OpenCSV libraries are already
   included).
 - An announcements screen (the table already exists).
+
+## License
+
+[MIT](LICENSE)
